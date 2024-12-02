@@ -1,5 +1,4 @@
 use itertools::Itertools;
-use std::{iter, str::FromStr};
 
 fn main() {
     let (mut left, mut right): (Vec<_>, Vec<_>) =
@@ -7,8 +6,8 @@ fn main() {
             .lines()
             .filter_map(|l| {
                 l.split_whitespace()
+                    .filter_map(|x| x.parse::<usize>().ok())
                     .collect_tuple()
-                    .and_then(|(l, r)| Some(((usize::from_str(l).ok()?), usize::from_str(r).ok()?)))
             })
             .unzip();
 
@@ -16,10 +15,10 @@ fn main() {
     right.sort();
 
     // part 1
-
     println!(
         "part 1 : {}",
-        iter::zip(left.iter(), right.iter())
+        left.iter()
+            .zip(&right)
             .map(|(l, r)| l.abs_diff(*r))
             .sum::<usize>()
     );
