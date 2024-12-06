@@ -1,7 +1,7 @@
 [package]
+edition = "2021"
 name = "advent-of-code-2024"
 version = "0.1.0"
-edition = "2021"
 
 [[bin]]
 name = "day1"
@@ -18,6 +18,10 @@ path = "src/day3.rs"
 [[bin]]
 name = "day4"
 path = "src/day4.rs"
+
+[[bin]]
+name = "day5"
+path = "src/day5.rs"
 
 [dependencies]
 itertools = "0.13.0"
