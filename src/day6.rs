@@ -1,50 +1,59 @@
 use itertools::Itertools;
+use rayon::iter::{IntoParallelIterator, ParallelIterator};
+use std::collections::HashSet;
 
 fn main() {
-    let mut input = String::from_utf8_lossy(include_bytes!("../inputs/day6.txt"))
+    let map = String::from_utf8_lossy(include_bytes!("../inputs/day6.txt"))
+        .trim()
         .lines()
         .map(|l| l.chars().collect_vec())
         .collect_vec();
 
-    let ((mut dx, mut dy), (mut x, mut y)) = (
-        (-1, 0),
-        input
-            .iter()
-            .enumerate()
-            .find_map(|(x, l)| {
-                l.iter()
-                    .position(|&c| c == '^')
-                    .map(|y| (x as isize, y as isize))
-            })
-            .expect("could not find start position"),
-    );
+    let (start_x, start_y) = (0..map.len())
+        .cartesian_product(0..map[0].len())
+        .find_map(|(x, y)| (map[x][y] == '^').then_some((x as isize, y as isize)))
+        .expect("could not find start position");
 
-    while let Some(&c) = input
-        .get((x + dx) as usize)
-        .and_then(|l| l.get((y + dy) as usize))
-    {
-        input[x as usize][y as usize] = 'X';
-        if c == '#' {
-            (dx, dy) = match (dx, dy) {
-                (-1, 0) => (0, 1),  // ^ => >
-                (0, 1) => (1, 0),   // > => v
-                (1, 0) => (0, -1),  // v => <
-                (0, -1) => (-1, 0), // < => ^
-                _ => panic!(),
-            };
+    let solve = |map: &[Vec<_>], mut dx, mut dy, mut d, mut x, mut y| {
+        let mut visited = HashSet::new();
+
+        while let Some(&c) = map.get(x as usize).and_then(|l| l.get(y as usize)) {
+            if c == '#' {
+                (x, y) = (x - dx, y - dy);
+                (dx, dy, d) = match (dx, dy) {
+                    (-1, 0) => (0, 1, '>'),  // ^ => >
+                    (0, 1) => (1, 0, 'v'),   // > => v
+                    (1, 0) => (0, -1, '<'),  // v => <
+                    (0, -1) => (-1, 0, '^'), // < => ^
+                    _ => panic!(),
+                };
+            } else if !visited.insert((x, y, d)) {
+                return HashSet::with_capacity(0);
+            }
+
+            (x, y) = (x + dx, y + dy);
         }
-        (x, y) = (x + dx, y + dy);
-    }
 
-    input[x as usize][y as usize] = 'X';
-    // println!("{}", input.iter().map(|l| l.iter().join("")).join("\n"));
+        visited
+    };
 
     // part 1
+    let p1 = solve(&map, -1, 0, '^', start_x, start_y)
+        .into_iter()
+        .filter(|&(x, y, _)| !(x == start_x && y == start_y))
+        .unique_by(|&(x, y, _)| (x, y))
+        .collect_vec();
+    println!("part 1 : {}", p1.len() + 1);
+
+    // part 2
     println!(
-        "part 1 : {}",
-        input
-            .iter()
-            .map(|l| l.iter().filter(|&c| *c == 'X').count())
-            .sum::<usize>()
-    );
+        "part 2 : {}",
+        p1.into_par_iter()
+            .filter(|&(x, y, _)| {
+                let mut map = map.clone();
+                map[x as usize][y as usize] = '#';
+                solve(&map, -1, 0, '^', start_x, start_y).is_empty()
+            })
+            .count()
+    )
 }
