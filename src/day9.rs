@@ -29,7 +29,11 @@ fn main() {
             .sum::<usize>()
     };
 
-    println!("prepare : {}µs", now.elapsed().as_micros());
+    println!(
+        "prepare : {}.{:0>3}ms",
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
+    );
 
     // part 1
     let now = Instant::now();
@@ -42,9 +46,10 @@ fn main() {
         .for_each(|(f, u)| p1.swap(f, u));
 
     println!(
-        "part 1 : {} ({}µs)",
+        "part 1 : {} ({}.{:0>3}ms)",
         checksum(p1),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 
     // part 2
@@ -74,8 +79,9 @@ fn main() {
     });
 
     println!(
-        "part 2 : {} ({}µs)",
+        "part 2 : {} ({}.{:0>3}ms)",
         checksum(input),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 }

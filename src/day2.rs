@@ -21,20 +21,25 @@ fn main() {
             .all(|d| d != 0 && d.abs() <= 3 && d.is_positive() == ord)
     };
 
-    println!("prepare : {}µs", now.elapsed().as_micros());
+    println!(
+        "prepare : {}.{:0>3}ms",
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
+    );
 
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}µs)",
+        "part 1 : {} ({}.{:0>3}ms)",
         input.iter().filter(|l| is_safe(l)).count(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}µs)",
+        "part 2 : {} ({}.{:0>3}ms)",
         input
             .iter()
             .filter(|l| {
@@ -49,6 +54,7 @@ fn main() {
                     })
             })
             .count(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     )
 }

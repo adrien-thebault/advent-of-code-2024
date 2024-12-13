@@ -16,23 +16,28 @@ fn main() {
     left.sort();
     right.sort();
 
-    println!("prepare : {}µs", now.elapsed().as_micros());
+    println!(
+        "prepare : {}.{:0>3}ms",
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
+    );
 
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}µs)",
+        "part 1 : {} ({}.{:0>3}ms)",
         left.iter()
             .zip(&right)
             .map(|(l, r)| l.abs_diff(*r))
             .sum::<usize>(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}µs)",
+        "part 2 : {} ({}.{:0>3}ms)",
         left.iter()
             .filter_map(|l| {
                 right
@@ -41,6 +46,7 @@ fn main() {
                     .map(|i| l * right.iter().skip(i).take_while(|r| *r == l).count())
             })
             .sum::<usize>(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     )
 }

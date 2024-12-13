@@ -28,23 +28,29 @@ fn main() {
             });
     };
 
-    println!("prepare : {}µs", now.elapsed().as_micros());
+    println!(
+        "prepare : {}.{:0>3}ms",
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
+    );
 
     // part 1
     let now = Instant::now();
     (0..25).for_each(|_| blink(&mut stones));
     println!(
-        "part 1 : {} ({}µs)",
+        "part 1 : {} ({}.{:0>3}ms)",
         stones.values().sum::<usize>(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 
     // part 2
     let now = Instant::now();
     (0..50).for_each(|_| blink(&mut stones));
     println!(
-        "part 2 : {} ({}µs)",
+        "part 2 : {} ({}.{:0>3}ms)",
         stones.values().sum::<usize>(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 }

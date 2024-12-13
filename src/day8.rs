@@ -21,12 +21,16 @@ fn main() {
             .collect_vec(),
     );
 
-    println!("prepare : {}µs", now.elapsed().as_micros());
+    println!(
+        "prepare : {}.{:0>3}ms",
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
+    );
 
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}µs)",
+        "part 1 : {} ({}.{:0>3}ms)",
         combinations
             .iter()
             .flat_map(|c| {
@@ -37,13 +41,14 @@ fn main() {
             .filter(|&(x, y)| x < h && y < w)
             .unique()
             .count(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}µs)",
+        "part 2 : {} ({}.{:0>3}ms)",
         combinations
             .iter()
             .flat_map(|c| {
@@ -67,6 +72,7 @@ fn main() {
             })
             .unique()
             .count(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 }

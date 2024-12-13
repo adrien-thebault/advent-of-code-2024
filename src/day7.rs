@@ -32,12 +32,16 @@ fn main() {
         })
         .collect_vec();
 
-    println!("prepare : {}µs", now.elapsed().as_micros());
+    println!(
+        "prepare : {}.{:0>3}ms",
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
+    );
 
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}µs)",
+        "part 1 : {} ({}.{:0>3}ms)",
         input
             .iter()
             .filter_map(|(r, v)| compute(v, &[|a, b| a + b, |a, b| a * b,])
@@ -45,13 +49,14 @@ fn main() {
                 .any(|x| x == r)
                 .then_some(r))
             .sum::<isize>(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}µs)",
+        "part 2 : {} ({}.{:0>3}ms)",
         input
             .iter()
             .filter_map(|(r, v)| compute(
@@ -66,6 +71,7 @@ fn main() {
             .any(|x| x == r)
             .then_some(r))
             .sum::<isize>(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 }

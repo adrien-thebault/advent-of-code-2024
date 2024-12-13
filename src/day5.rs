@@ -25,20 +25,25 @@ fn main() {
             })
             .partition(|u| u.is_sorted_by(|a, b| !rules.contains(&(*b, *a))));
 
-        println!("prepare : {}µs", now.elapsed().as_micros());
+        println!(
+            "prepare : {}.{:0>3}ms",
+            now.elapsed().as_millis(),
+            now.elapsed().subsec_millis()
+        );
 
         // part 1
         let now = Instant::now();
         println!(
-            "part 1 : {} ({}µs)",
+            "part 1 : {} ({}.{:0>3}ms)",
             ordered.iter().map(|u| u[u.len() / 2]).sum::<usize>(),
-            now.elapsed().as_micros()
+            now.elapsed().as_millis(),
+            now.elapsed().subsec_millis()
         );
 
         // part 2
         let now = Instant::now();
         println!(
-            "part 2 : {} ({}µs)",
+            "part 2 : {} ({}.{:0>3}ms)",
             unordered
                 .into_iter()
                 .map(|u| {
@@ -57,7 +62,8 @@ fn main() {
                     sorted[sorted.len() / 2]
                 })
                 .sum::<usize>(),
-            now.elapsed().as_micros()
+            now.elapsed().as_millis(),
+            now.elapsed().subsec_millis()
         );
     }
 }

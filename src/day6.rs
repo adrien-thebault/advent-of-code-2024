@@ -38,7 +38,11 @@ fn main() {
         visited
     };
 
-    println!("prepare : {}µs", now.elapsed().as_micros());
+    println!(
+        "prepare : {}.{:0>3}ms",
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
+    );
 
     // part 1
     let now = Instant::now();
@@ -48,15 +52,16 @@ fn main() {
         .unique_by(|&(x, y, _)| (x, y))
         .collect_vec();
     println!(
-        "part 1 : {} ({}µs)",
+        "part 1 : {} ({}.{:0>3}ms)",
         p1.len() + 1,
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}µs)",
+        "part 2 : {} ({}.{:0>3}ms)",
         p1.into_par_iter()
             .filter(|&(x, y, _)| {
                 let mut map = map.clone();
@@ -64,6 +69,7 @@ fn main() {
                 solve(&map, -1, 0, '^', start_x, start_y).is_empty()
             })
             .count(),
-        now.elapsed().as_micros()
+        now.elapsed().as_millis(),
+        now.elapsed().subsec_millis()
     )
 }
