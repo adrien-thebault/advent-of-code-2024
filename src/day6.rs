@@ -3,6 +3,7 @@ use rayon::iter::{IntoParallelIterator, ParallelIterator};
 use std::{collections::HashSet, time::Instant};
 
 fn main() {
+    let now = Instant::now();
     let map = String::from_utf8_lossy(include_bytes!("../inputs/day6.txt"))
         .trim()
         .lines()
@@ -37,6 +38,8 @@ fn main() {
         visited
     };
 
+    println!("prepare : {}µs", now.elapsed().as_micros());
+
     // part 1
     let now = Instant::now();
     let p1 = solve(&map, -1, 0, '^', start_x, start_y)
@@ -45,15 +48,15 @@ fn main() {
         .unique_by(|&(x, y, _)| (x, y))
         .collect_vec();
     println!(
-        "part 1 : {} ({}ms)",
+        "part 1 : {} ({}µs)",
         p1.len() + 1,
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}ms)",
+        "part 2 : {} ({}µs)",
         p1.into_par_iter()
             .filter(|&(x, y, _)| {
                 let mut map = map.clone();
@@ -61,6 +64,6 @@ fn main() {
                 solve(&map, -1, 0, '^', start_x, start_y).is_empty()
             })
             .count(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     )
 }

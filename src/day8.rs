@@ -2,6 +2,7 @@ use itertools::Itertools;
 use std::time::Instant;
 
 fn main() {
+    let now = Instant::now();
     let input = String::from_utf8_lossy(include_bytes!("../inputs/day8.txt"));
     let (h, w, combinations) = (
         input.lines().count(),
@@ -20,10 +21,12 @@ fn main() {
             .collect_vec(),
     );
 
+    println!("prepare : {}µs", now.elapsed().as_micros());
+
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}ms)",
+        "part 1 : {} ({}µs)",
         combinations
             .iter()
             .flat_map(|c| {
@@ -34,13 +37,13 @@ fn main() {
             .filter(|&(x, y)| x < h && y < w)
             .unique()
             .count(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}ms)",
+        "part 2 : {} ({}µs)",
         combinations
             .iter()
             .flat_map(|c| {
@@ -64,6 +67,6 @@ fn main() {
             })
             .unique()
             .count(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 }

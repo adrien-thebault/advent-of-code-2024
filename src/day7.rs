@@ -12,6 +12,7 @@ fn compute(v: &[isize], ops: &[fn(isize, isize) -> isize]) -> Vec<isize> {
 }
 
 fn main() {
+    let now = Instant::now();
     let input = String::from_utf8_lossy(include_bytes!("../inputs/day7.txt"))
         .lines()
         .filter_map(|l| {
@@ -31,10 +32,12 @@ fn main() {
         })
         .collect_vec();
 
+    println!("prepare : {}µs", now.elapsed().as_micros());
+
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}ms)",
+        "part 1 : {} ({}µs)",
         input
             .iter()
             .filter_map(|(r, v)| compute(v, &[|a, b| a + b, |a, b| a * b,])
@@ -42,13 +45,13 @@ fn main() {
                 .any(|x| x == r)
                 .then_some(r))
             .sum::<isize>(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}ms)",
+        "part 2 : {} ({}µs)",
         input
             .iter()
             .filter_map(|(r, v)| compute(
@@ -63,6 +66,6 @@ fn main() {
             .any(|x| x == r)
             .then_some(r))
             .sum::<isize>(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 }

@@ -2,6 +2,7 @@ use itertools::Itertools;
 use std::{collections::HashMap, time::Instant};
 
 fn main() {
+    let now = Instant::now();
     let mut stones = String::from_utf8_lossy(include_bytes!("../inputs/day11.txt"))
         .trim()
         .split_ascii_whitespace()
@@ -27,21 +28,23 @@ fn main() {
             });
     };
 
+    println!("prepare : {}µs", now.elapsed().as_micros());
+
     // part 1
     let now = Instant::now();
     (0..25).for_each(|_| blink(&mut stones));
     println!(
-        "part 1 : {} ({}ms)",
+        "part 1 : {} ({}µs)",
         stones.values().sum::<usize>(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 
     // part 2
     let now = Instant::now();
     (0..50).for_each(|_| blink(&mut stones));
     println!(
-        "part 2 : {} ({}ms)",
+        "part 2 : {} ({}µs)",
         stones.values().sum::<usize>(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 }

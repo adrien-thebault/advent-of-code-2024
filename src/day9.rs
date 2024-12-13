@@ -2,6 +2,7 @@ use itertools::Itertools;
 use std::{iter, time::Instant};
 
 fn main() {
+    let now = Instant::now();
     let mut fid = -1;
     let mut input = String::from_utf8_lossy(include_bytes!("../inputs/day9.txt"))
         .chars()
@@ -28,6 +29,8 @@ fn main() {
             .sum::<usize>()
     };
 
+    println!("prepare : {}µs", now.elapsed().as_micros());
+
     // part 1
     let now = Instant::now();
     let mut p1 = input.clone();
@@ -39,9 +42,9 @@ fn main() {
         .for_each(|(f, u)| p1.swap(f, u));
 
     println!(
-        "part 1 : {} ({}ms)",
+        "part 1 : {} ({}µs)",
         checksum(p1),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 
     // part 2
@@ -71,8 +74,8 @@ fn main() {
     });
 
     println!(
-        "part 2 : {} ({}ms)",
+        "part 2 : {} ({}µs)",
         checksum(input),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 }

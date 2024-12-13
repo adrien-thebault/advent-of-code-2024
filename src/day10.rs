@@ -20,6 +20,7 @@ fn trail(map: &[Vec<u32>], (w, h): (usize, usize), (x, y): (usize, usize)) -> Ve
 }
 
 fn main() {
+    let now = Instant::now();
     let map = String::from_utf8_lossy(include_bytes!("../inputs/day10.txt"))
         .lines()
         .map(|l| l.chars().filter_map(|c| c.to_digit(10)).collect_vec())
@@ -33,25 +34,27 @@ fn main() {
             .collect_vec(),
     );
 
+    println!("prepare : {}µs", now.elapsed().as_micros());
+
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}ms)",
+        "part 1 : {} ({}µs)",
         starts
             .par_iter()
             .map(|&pos| trail(&map, d, pos).iter().unique().count())
             .sum::<usize>(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 
     // part 2
     let now = Instant::now();
     println!(
-        "part 2 : {} ({}ms)",
+        "part 2 : {} ({}µs)",
         starts
             .par_iter()
             .map(|&pos| trail(&map, d, pos).len())
             .sum::<usize>(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 }

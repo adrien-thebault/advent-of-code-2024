@@ -3,6 +3,7 @@ use regex::Regex;
 use std::time::Instant;
 
 fn main() {
+    let now = Instant::now();
     let input = String::from_utf8_lossy(include_bytes!("../inputs/day3.txt"));
     let (mul_regex, cond_regex) = (
         Regex::new("mul\\((\\d+),(\\d+)\\)").expect("invalid regex"),
@@ -22,19 +23,21 @@ fn main() {
             .sum::<i32>()
     };
 
+    println!("prepare : {}µs", now.elapsed().as_micros());
+
     // part 1
     let now = Instant::now();
     println!(
-        "part 1 : {} ({}ms)",
+        "part 1 : {} ({}µs)",
         fn_mul(&input),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 
     // part 2
     let now = Instant::now();
     let mut op = true;
     println!(
-        "part 2 : {} ({}ms)",
+        "part 2 : {} ({}µs)",
         cond_regex
             .replace_all(&input, "\n$1\n")
             .lines()
@@ -51,6 +54,6 @@ fn main() {
                 _ => 0,
             })
             .sum::<i32>(),
-        now.elapsed().as_millis()
+        now.elapsed().as_micros()
     );
 }

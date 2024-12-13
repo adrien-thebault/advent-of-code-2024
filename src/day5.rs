@@ -2,6 +2,7 @@ use itertools::Itertools;
 use std::{cmp::Ordering, str::FromStr, time::Instant};
 
 fn main() {
+    let now = Instant::now();
     if let Some((rules, updates)) = String::from_utf8_lossy(include_bytes!("../inputs/day5.txt"))
         .trim()
         .split_once("\n\n")
@@ -24,18 +25,20 @@ fn main() {
             })
             .partition(|u| u.is_sorted_by(|a, b| !rules.contains(&(*b, *a))));
 
+        println!("prepare : {}µs", now.elapsed().as_micros());
+
         // part 1
         let now = Instant::now();
         println!(
-            "part 1 : {} ({}ms)",
+            "part 1 : {} ({}µs)",
             ordered.iter().map(|u| u[u.len() / 2]).sum::<usize>(),
-            now.elapsed().as_millis()
+            now.elapsed().as_micros()
         );
 
         // part 2
         let now = Instant::now();
         println!(
-            "part 2 : {} ({}ms)",
+            "part 2 : {} ({}µs)",
             unordered
                 .into_iter()
                 .map(|u| {
@@ -54,7 +57,7 @@ fn main() {
                     sorted[sorted.len() / 2]
                 })
                 .sum::<usize>(),
-            now.elapsed().as_millis()
+            now.elapsed().as_micros()
         );
     }
 }
