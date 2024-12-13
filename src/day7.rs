@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use std::time::Instant;
 
 fn compute(v: &[isize], ops: &[fn(isize, isize) -> isize]) -> Vec<isize> {
     match v.len() {
@@ -32,22 +32,25 @@ fn main() {
         .collect_vec();
 
     // part 1
+    let now = Instant::now();
     println!(
-        "part 1 : {}",
+        "part 1 : {} ({}ms)",
         input
-            .par_iter()
+            .iter()
             .filter_map(|(r, v)| compute(v, &[|a, b| a + b, |a, b| a * b,])
                 .iter()
                 .any(|x| x == r)
                 .then_some(r))
-            .sum::<isize>()
+            .sum::<isize>(),
+        now.elapsed().as_millis()
     );
 
     // part 2
+    let now = Instant::now();
     println!(
-        "part 2 : {}",
+        "part 2 : {} ({}ms)",
         input
-            .par_iter()
+            .iter()
             .filter_map(|(r, v)| compute(
                 v,
                 &[
@@ -59,6 +62,7 @@ fn main() {
             .iter()
             .any(|x| x == r)
             .then_some(r))
-            .sum::<isize>()
+            .sum::<isize>(),
+        now.elapsed().as_millis()
     );
 }

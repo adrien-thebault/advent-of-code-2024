@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use regex::Regex;
+use std::time::Instant;
 
 fn main() {
     let input = String::from_utf8_lossy(include_bytes!("../inputs/day3.txt"));
@@ -22,12 +23,18 @@ fn main() {
     };
 
     // part 1
-    println!("part 1 : {}", fn_mul(&input));
+    let now = Instant::now();
+    println!(
+        "part 1 : {} ({}ms)",
+        fn_mul(&input),
+        now.elapsed().as_millis()
+    );
 
     // part 2
+    let now = Instant::now();
     let mut op = true;
     println!(
-        "part 2 : {}",
+        "part 2 : {} ({}ms)",
         cond_regex
             .replace_all(&input, "\n$1\n")
             .lines()
@@ -43,6 +50,7 @@ fn main() {
                 l if op => fn_mul(l),
                 _ => 0,
             })
-            .sum::<i32>()
+            .sum::<i32>(),
+        now.elapsed().as_millis()
     );
 }

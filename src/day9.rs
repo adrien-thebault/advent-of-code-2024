@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use std::iter;
+use std::{iter, time::Instant};
 
 fn main() {
     let mut fid = -1;
@@ -29,6 +29,7 @@ fn main() {
     };
 
     // part 1
+    let now = Instant::now();
     let mut p1 = input.clone();
     input
         .iter()
@@ -37,9 +38,14 @@ fn main() {
         .take_while(|&(f, u)| f < u)
         .for_each(|(f, u)| p1.swap(f, u));
 
-    println!("part 1 : {}", checksum(p1));
+    println!(
+        "part 1 : {} ({}ms)",
+        checksum(p1),
+        now.elapsed().as_millis()
+    );
 
     // part 2
+    let now = Instant::now();
     let (free, mut used): (Vec<_>, Vec<_>) = input
         .iter()
         .enumerate()
@@ -64,5 +70,9 @@ fn main() {
         }
     });
 
-    println!("part 2 : {}", checksum(input));
+    println!(
+        "part 2 : {} ({}ms)",
+        checksum(input),
+        now.elapsed().as_millis()
+    );
 }

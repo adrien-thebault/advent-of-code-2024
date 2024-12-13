@@ -1,5 +1,6 @@
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use std::time::Instant;
 
 fn trail(map: &[Vec<u32>], (w, h): (usize, usize), (x, y): (usize, usize)) -> Vec<(usize, usize)> {
     if map[x][y] == 9 {
@@ -33,20 +34,24 @@ fn main() {
     );
 
     // part 1
+    let now = Instant::now();
     println!(
-        "part 1 : {}",
+        "part 1 : {} ({}ms)",
         starts
             .par_iter()
             .map(|&pos| trail(&map, d, pos).iter().unique().count())
-            .sum::<usize>()
+            .sum::<usize>(),
+        now.elapsed().as_millis()
     );
 
     // part 2
+    let now = Instant::now();
     println!(
-        "part 2 : {}",
+        "part 2 : {} ({}ms)",
         starts
             .par_iter()
             .map(|&pos| trail(&map, d, pos).len())
-            .sum::<usize>()
+            .sum::<usize>(),
+        now.elapsed().as_millis()
     );
 }

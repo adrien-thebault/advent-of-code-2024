@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::time::Instant;
 
 fn main() {
     let input = String::from_utf8_lossy(include_bytes!("../inputs/day2.txt"))
@@ -20,11 +21,17 @@ fn main() {
     };
 
     // part 1
-    println!("part 1 : {}", input.iter().filter(|l| is_safe(l)).count());
+    let now = Instant::now();
+    println!(
+        "part 1 : {} ({}ms)",
+        input.iter().filter(|l| is_safe(l)).count(),
+        now.elapsed().as_millis()
+    );
 
     // part 2
+    let now = Instant::now();
     println!(
-        "part 2 : {}",
+        "part 2 : {} ({}ms)",
         input
             .iter()
             .filter(|l| {
@@ -38,6 +45,7 @@ fn main() {
                         )
                     })
             })
-            .count()
+            .count(),
+        now.elapsed().as_millis()
     )
 }

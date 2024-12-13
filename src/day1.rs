@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::time::Instant;
 
 fn main() {
     let (mut left, mut right): (Vec<_>, Vec<_>) =
@@ -15,17 +16,20 @@ fn main() {
     right.sort();
 
     // part 1
+    let now = Instant::now();
     println!(
-        "part 1 : {}",
+        "part 1 : {} ({}ms)",
         left.iter()
             .zip(&right)
             .map(|(l, r)| l.abs_diff(*r))
-            .sum::<usize>()
+            .sum::<usize>(),
+        now.elapsed().as_millis()
     );
 
     // part 2
+    let now = Instant::now();
     println!(
-        "part 2 : {}",
+        "part 2 : {} ({}ms)",
         left.iter()
             .filter_map(|l| {
                 right
@@ -33,6 +37,7 @@ fn main() {
                     .position(|r| r == l)
                     .map(|i| l * right.iter().skip(i).take_while(|r| *r == l).count())
             })
-            .sum::<usize>()
+            .sum::<usize>(),
+        now.elapsed().as_millis()
     )
 }

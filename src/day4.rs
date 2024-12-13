@@ -1,5 +1,5 @@
 use itertools::Itertools;
-use std::collections::HashMap;
+use std::{collections::HashMap, time::Instant};
 
 fn main() {
     let input = String::from_utf8_lossy(include_bytes!("../inputs/day4.txt"))
@@ -31,8 +31,9 @@ fn main() {
     };
 
     // part 1
+    let now = Instant::now();
     println!(
-        "part 1 : {}",
+        "part 1 : {} ({}ms)",
         search_fn(
             &input,
             'X',
@@ -52,12 +53,14 @@ fn main() {
             "XMAS",
         )
         .into_iter()
-        .sum::<usize>()
+        .sum::<usize>(),
+        now.elapsed().as_millis()
     );
 
     // part 2
+    let now = Instant::now();
     println!(
-        "part 2 : {}",
+        "part 2 : {} ({}ms)",
         search_fn(
             &input,
             'A',
@@ -71,6 +74,7 @@ fn main() {
         )
         .into_iter()
         .filter(|r| *r == 2)
-        .count()
+        .count(),
+        now.elapsed().as_millis()
     )
 }

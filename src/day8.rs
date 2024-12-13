@@ -1,4 +1,5 @@
 use itertools::Itertools;
+use std::time::Instant;
 
 fn main() {
     let input = String::from_utf8_lossy(include_bytes!("../inputs/day8.txt"));
@@ -20,8 +21,9 @@ fn main() {
     );
 
     // part 1
+    let now = Instant::now();
     println!(
-        "part 1 : {}",
+        "part 1 : {} ({}ms)",
         combinations
             .iter()
             .flat_map(|c| {
@@ -31,12 +33,14 @@ fn main() {
             })
             .filter(|&(x, y)| x < h && y < w)
             .unique()
-            .count()
+            .count(),
+        now.elapsed().as_millis()
     );
 
     // part 2
+    let now = Instant::now();
     println!(
-        "part 2 : {}",
+        "part 2 : {} ({}ms)",
         combinations
             .iter()
             .flat_map(|c| {
@@ -59,6 +63,7 @@ fn main() {
                 antinodes
             })
             .unique()
-            .count()
+            .count(),
+        now.elapsed().as_millis()
     );
 }
