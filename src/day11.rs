@@ -1,13 +1,19 @@
+use advent_of_code_2024::*;
 use itertools::Itertools;
-use std::{collections::HashMap, time::Instant};
+use std::collections::HashMap;
 
 fn main() {
-    let now = Instant::now();
-    let mut stones = String::from_utf8_lossy(include_bytes!("../inputs/day11.txt"))
-        .trim()
-        .split_ascii_whitespace()
-        .filter_map(|n| n.parse().ok().map(|n| (n, 1)))
-        .collect();
+    timer!("total");
+    let mut stones;
+
+    {
+        timer!("prepare");
+        stones = String::from_utf8_lossy(include_bytes!("../inputs/day11.txt"))
+            .trim()
+            .split_ascii_whitespace()
+            .filter_map(|n| n.parse().ok().map(|n| (n, 1)))
+            .collect();
+    }
 
     let blink = |stones: &mut HashMap<usize, _>| {
         stones
@@ -28,29 +34,17 @@ fn main() {
             });
     };
 
-    println!(
-        "prepare : {}.{:0>3}ms",
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
-
     // part 1
-    let now = Instant::now();
-    (0..25).for_each(|_| blink(&mut stones));
-    println!(
-        "part 1 : {} ({}.{:0>3}ms)",
-        stones.values().sum::<usize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 1");
+        (0..25).for_each(|_| blink(&mut stones));
+        println!("part 1 : {}", stones.values().sum::<usize>());
+    }
 
     // part 2
-    let now = Instant::now();
-    (0..50).for_each(|_| blink(&mut stones));
-    println!(
-        "part 2 : {} ({}.{:0>3}ms)",
-        stones.values().sum::<usize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 2");
+        (0..50).for_each(|_| blink(&mut stones));
+        println!("part 2 : {}", stones.values().sum::<usize>());
+    }
 }

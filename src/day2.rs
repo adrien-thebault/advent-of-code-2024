@@ -1,17 +1,22 @@
+use advent_of_code_2024::*;
 use itertools::Itertools;
-use std::time::Instant;
 
 fn main() {
-    let now = Instant::now();
-    let input = String::from_utf8_lossy(include_bytes!("../inputs/day2.txt"))
-        .trim()
-        .lines()
-        .map(|l| {
-            l.split_whitespace()
-                .filter_map(|x| x.parse().ok())
-                .collect_vec()
-        })
-        .collect_vec();
+    timer!("total");
+    let input;
+
+    {
+        timer!("prepare");
+        input = String::from_utf8_lossy(include_bytes!("../inputs/day2.txt"))
+            .trim()
+            .lines()
+            .map(|l| {
+                l.split_whitespace()
+                    .filter_map(|x| x.parse().ok())
+                    .collect_vec()
+            })
+            .collect_vec();
+    }
 
     let is_safe = |l: &[i32]| {
         let ord = (l[0] - l[1]).is_positive();
@@ -21,40 +26,31 @@ fn main() {
             .all(|d| d != 0 && d.abs() <= 3 && d.is_positive() == ord)
     };
 
-    println!(
-        "prepare : {}.{:0>3}ms",
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
-
     // part 1
-    let now = Instant::now();
-    println!(
-        "part 1 : {} ({}.{:0>3}ms)",
-        input.iter().filter(|l| is_safe(l)).count(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 1");
+        println!("part 1 : {}", input.iter().filter(|l| is_safe(l)).count());
+    }
 
     // part 2
-    let now = Instant::now();
-    println!(
-        "part 2 : {} ({}.{:0>3}ms)",
-        input
-            .iter()
-            .filter(|l| {
-                is_safe(l)
-                    || (0..l.len()).any(|i| {
-                        is_safe(
-                            &l.iter()
-                                .enumerate()
-                                .filter_map(|(j, x)| (i != j).then_some(*x))
-                                .collect_vec(),
-                        )
-                    })
-            })
-            .count(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    )
+    {
+        timer!("part 2");
+        println!(
+            "part 2 : {}",
+            input
+                .iter()
+                .filter(|l| {
+                    is_safe(l)
+                        || (0..l.len()).any(|i| {
+                            is_safe(
+                                &l.iter()
+                                    .enumerate()
+                                    .filter_map(|(j, x)| (i != j).then_some(*x))
+                                    .collect_vec(),
+                            )
+                        })
+                })
+                .count()
+        );
+    }
 }

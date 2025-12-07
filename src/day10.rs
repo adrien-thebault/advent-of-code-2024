@@ -1,6 +1,6 @@
+use advent_of_code_2024::*;
 use itertools::Itertools;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
-use std::time::Instant;
 
 fn trail(map: &[Vec<u32>], (w, h): (usize, usize), (x, y): (usize, usize)) -> Vec<(usize, usize)> {
     if map[x][y] == 9 {
@@ -20,47 +20,46 @@ fn trail(map: &[Vec<u32>], (w, h): (usize, usize), (x, y): (usize, usize)) -> Ve
 }
 
 fn main() {
-    let now = Instant::now();
-    let map = String::from_utf8_lossy(include_bytes!("../inputs/day10.txt"))
-        .lines()
-        .map(|l| l.chars().filter_map(|c| c.to_digit(10)).collect_vec())
-        .collect_vec();
+    timer!("total");
+    let (map, d, starts);
 
-    let (d, starts) = (
-        (map.len(), map[0].len()),
-        map.iter()
-            .enumerate()
-            .flat_map(|(x, l)| l.iter().positions(|&h| h == 0).map(move |y| (x, y)))
-            .collect_vec(),
-    );
+    {
+        timer!("prepare");
+        map = String::from_utf8_lossy(include_bytes!("../inputs/day10.txt"))
+            .lines()
+            .map(|l| l.chars().filter_map(|c| c.to_digit(10)).collect_vec())
+            .collect_vec();
 
-    println!(
-        "prepare : {}.{:0>3}ms",
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+        (d, starts) = (
+            (map.len(), map[0].len()),
+            map.iter()
+                .enumerate()
+                .flat_map(|(x, l)| l.iter().positions(|&h| h == 0).map(move |y| (x, y)))
+                .collect_vec(),
+        );
+    }
 
     // part 1
-    let now = Instant::now();
-    println!(
-        "part 1 : {} ({}.{:0>3}ms)",
-        starts
-            .par_iter()
-            .map(|&pos| trail(&map, d, pos).iter().unique().count())
-            .sum::<usize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 1");
+        println!(
+            "part 1 : {}",
+            starts
+                .par_iter()
+                .map(|&pos| trail(&map, d, pos).iter().unique().count())
+                .sum::<usize>()
+        );
+    }
 
     // part 2
-    let now = Instant::now();
-    println!(
-        "part 2 : {} ({}.{:0>3}ms)",
-        starts
-            .par_iter()
-            .map(|&pos| trail(&map, d, pos).len())
-            .sum::<usize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 2");
+        println!(
+            "part 2 : {}",
+            starts
+                .par_iter()
+                .map(|&pos| trail(&map, d, pos).len())
+                .sum::<usize>()
+        );
+    }
 }

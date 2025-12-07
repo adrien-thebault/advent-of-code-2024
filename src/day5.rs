@@ -1,13 +1,18 @@
+use advent_of_code_2024::*;
 use itertools::Itertools;
-use std::{cmp::Ordering, str::FromStr, time::Instant};
+use std::{cmp::Ordering, str::FromStr};
 
 fn main() {
-    let now = Instant::now();
-    if let Some((rules, updates)) = String::from_utf8_lossy(include_bytes!("../inputs/day5.txt"))
-        .trim()
-        .split_once("\n\n")
+    timer!("total");
+    let (rules, ordered, unordered): (_, Vec<_>, Vec<_>);
+
     {
-        let rules = rules
+        timer!("prepare");
+
+        let input = String::from_utf8_lossy(include_bytes!("../inputs/day5.txt"));
+        let (parsed, updates) = input.trim().split_once("\n\n").unwrap();
+
+        rules = parsed
             .lines()
             .filter_map(|l| {
                 l.split('|')
@@ -16,7 +21,7 @@ fn main() {
             })
             .collect_vec();
 
-        let (ordered, unordered): (Vec<_>, Vec<_>) = updates
+        (ordered, unordered) = updates
             .lines()
             .map(|l| {
                 l.split(',')
@@ -24,26 +29,22 @@ fn main() {
                     .collect_vec()
             })
             .partition(|u| u.is_sorted_by(|a, b| !rules.contains(&(*b, *a))));
+    }
 
+    // part 1
+    {
+        timer!("part 1");
         println!(
-            "prepare : {}.{:0>3}ms",
-            now.elapsed().as_millis(),
-            now.elapsed().subsec_millis()
+            "part 1 : {}",
+            ordered.iter().map(|u| u[u.len() / 2]).sum::<usize>()
         );
+    }
 
-        // part 1
-        let now = Instant::now();
+    // part 2
+    {
+        timer!("part 2");
         println!(
-            "part 1 : {} ({}.{:0>3}ms)",
-            ordered.iter().map(|u| u[u.len() / 2]).sum::<usize>(),
-            now.elapsed().as_millis(),
-            now.elapsed().subsec_millis()
-        );
-
-        // part 2
-        let now = Instant::now();
-        println!(
-            "part 2 : {} ({}.{:0>3}ms)",
+            "part 2 : {}",
             unordered
                 .into_iter()
                 .map(|u| {
@@ -61,9 +62,7 @@ fn main() {
                         .collect_vec();
                     sorted[sorted.len() / 2]
                 })
-                .sum::<usize>(),
-            now.elapsed().as_millis(),
-            now.elapsed().subsec_millis()
+                .sum::<usize>()
         );
     }
 }

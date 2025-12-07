@@ -1,5 +1,5 @@
+use advent_of_code_2024::*;
 use itertools::Itertools;
-use std::time::Instant;
 
 fn compute(v: &[isize], ops: &[fn(isize, isize) -> isize]) -> Vec<isize> {
     match v.len() {
@@ -12,66 +12,67 @@ fn compute(v: &[isize], ops: &[fn(isize, isize) -> isize]) -> Vec<isize> {
 }
 
 fn main() {
-    let now = Instant::now();
-    let input = String::from_utf8_lossy(include_bytes!("../inputs/day7.txt"))
-        .lines()
-        .filter_map(|l| {
-            l.split_once(": ").and_then(|(r, v)| {
-                r.parse()
-                    .map(|r| {
-                        (
-                            r,
-                            v.split(' ')
-                                .rev()
-                                .filter_map(|x| x.parse().ok())
-                                .collect_vec(),
-                        )
-                    })
-                    .ok()
-            })
-        })
-        .collect_vec();
+    timer!("total");
+    let input;
 
-    println!(
-        "prepare : {}.{:0>3}ms",
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("prepare");
+        input = String::from_utf8_lossy(include_bytes!("../inputs/day7.txt"))
+            .lines()
+            .filter_map(|l| {
+                l.split_once(": ").and_then(|(r, v)| {
+                    r.parse()
+                        .map(|r| {
+                            (
+                                r,
+                                v.split(' ')
+                                    .rev()
+                                    .filter_map(|x| x.parse().ok())
+                                    .collect_vec(),
+                            )
+                        })
+                        .ok()
+                })
+            })
+            .collect_vec();
+    }
 
     // part 1
-    let now = Instant::now();
-    println!(
-        "part 1 : {} ({}.{:0>3}ms)",
-        input
-            .iter()
-            .filter_map(|(r, v)| compute(v, &[|a, b| a + b, |a, b| a * b,])
+
+    {
+        timer!("part 1");
+        println!(
+            "part 1 : {}",
+            input
+                .iter()
+                .filter_map(|(r, v)| compute(v, &[|a, b| a + b, |a, b| a * b,])
+                    .iter()
+                    .any(|x| x == r)
+                    .then_some(r))
+                .sum::<isize>()
+        );
+    }
+
+    // part 2
+
+    {
+        timer!("part 2");
+        println!(
+            "part 2 : {}",
+            input
+                .iter()
+                .filter_map(|(r, v)| compute(
+                    v,
+                    &[
+                        |a, b| a + b,
+                        |a, b| a * b,
+                        |a, b| b * 10isize.pow(a.ilog10() + 1) + a,
+                    ]
+                )
                 .iter()
                 .any(|x| x == r)
                 .then_some(r))
-            .sum::<isize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
-
-    // part 2
-    let now = Instant::now();
-    println!(
-        "part 2 : {} ({}.{:0>3}ms)",
-        input
-            .iter()
-            .filter_map(|(r, v)| compute(
-                v,
-                &[
-                    |a, b| a + b,
-                    |a, b| a * b,
-                    |a, b| b * 10isize.pow(a.ilog10() + 1) + a,
-                ]
-            )
-            .iter()
-            .any(|x| x == r)
-            .then_some(r))
-            .sum::<isize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+                .sum::<isize>()
+        );
+    }
 }

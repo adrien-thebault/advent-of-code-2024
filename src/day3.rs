@@ -1,14 +1,19 @@
+use advent_of_code_2024::*;
 use itertools::Itertools;
 use regex::Regex;
-use std::time::Instant;
 
 fn main() {
-    let now = Instant::now();
-    let input = String::from_utf8_lossy(include_bytes!("../inputs/day3.txt"));
-    let (mul_regex, cond_regex) = (
-        Regex::new("mul\\((\\d+),(\\d+)\\)").expect("invalid regex"),
-        Regex::new("(do|don't)\\(\\)").expect("invalid regex"),
-    );
+    timer!("total");
+    let (input, mul_regex, cond_regex);
+
+    {
+        timer!("prepare");
+        input = String::from_utf8_lossy(include_bytes!("../inputs/day3.txt"));
+        (mul_regex, cond_regex) = (
+            Regex::new("mul\\((\\d+),(\\d+)\\)").expect("invalid regex"),
+            Regex::new("(do|don't)\\(\\)").expect("invalid regex"),
+        );
+    }
 
     let fn_mul = |i: &str| {
         mul_regex
@@ -23,43 +28,34 @@ fn main() {
             .sum::<i32>()
     };
 
-    println!(
-        "prepare : {}.{:0>3}ms",
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
-
     // part 1
-    let now = Instant::now();
-    println!(
-        "part 1 : {} ({}.{:0>3}ms)",
-        fn_mul(&input),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 1");
+        println!("part 1 : {}", fn_mul(&input));
+    }
 
     // part 2
-    let now = Instant::now();
-    let mut op = true;
-    println!(
-        "part 2 : {} ({}.{:0>3}ms)",
-        cond_regex
-            .replace_all(&input, "\n$1\n")
-            .lines()
-            .map(|l| match l {
-                "do" if !op => {
-                    op = true;
-                    0
-                }
-                "don't" if op => {
-                    op = false;
-                    0
-                }
-                l if op => fn_mul(l),
-                _ => 0,
-            })
-            .sum::<i32>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 2");
+        let mut op = true;
+        println!(
+            "part 2 : {}",
+            cond_regex
+                .replace_all(&input, "\n$1\n")
+                .lines()
+                .map(|l| match l {
+                    "do" if !op => {
+                        op = true;
+                        0
+                    }
+                    "don't" if op => {
+                        op = false;
+                        0
+                    }
+                    l if op => fn_mul(l),
+                    _ => 0,
+                })
+                .sum::<i32>()
+        );
+    }
 }

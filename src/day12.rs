@@ -1,5 +1,6 @@
+use advent_of_code_2024::*;
 use itertools::Itertools;
-use std::{collections::HashSet, time::Instant};
+use std::collections::HashSet;
 
 struct Region {
     _plant: char,
@@ -42,66 +43,63 @@ impl Region {
 
 #[allow(clippy::filter_map_bool_then)]
 fn main() {
-    let now = Instant::now();
-    let regions = String::from_utf8_lossy(include_bytes!("../inputs/day12.txt"))
-        .trim()
-        .lines()
-        .enumerate()
-        .flat_map(|(i, l)| l.char_indices().map(move |(j, c)| (c, (i, j))))
-        .into_group_map_by(|(p, _)| *p)
-        .into_iter()
-        .flat_map(|(plant, points)| {
-            let mut remaining = points.iter().map(|(_, p)| *p).collect::<HashSet<_>>();
-            points.into_iter().filter_map(move |(_, start)| {
-                remaining.contains(&start).then(|| {
-                    let mut stack = vec![start];
-                    let mut region = vec![];
+    timer!("total");
+    let regions;
 
-                    while let Some((i, j)) = stack.pop() {
-                        if remaining.remove(&(i, j)) {
-                            region.push((i, j));
+    {
+        timer!("prepare");
+        regions = String::from_utf8_lossy(include_bytes!("../inputs/day12.txt"))
+            .trim()
+            .lines()
+            .enumerate()
+            .flat_map(|(i, l)| l.char_indices().map(move |(j, c)| (c, (i, j))))
+            .into_group_map_by(|(p, _)| *p)
+            .into_iter()
+            .flat_map(|(plant, points)| {
+                let mut remaining = points.iter().map(|(_, p)| *p).collect::<HashSet<_>>();
+                points.into_iter().filter_map(move |(_, start)| {
+                    remaining.contains(&start).then(|| {
+                        let mut stack = vec![start];
+                        let mut region = vec![];
 
-                            stack.extend_from_slice(&[
-                                (i + 1, j),
-                                (i - 1, j),
-                                (i, j + 1),
-                                (i, j - 1),
-                            ])
+                        while let Some((i, j)) = stack.pop() {
+                            if remaining.remove(&(i, j)) {
+                                region.push((i, j));
+
+                                stack.extend_from_slice(&[
+                                    (i + 1, j),
+                                    (i - 1, j),
+                                    (i, j + 1),
+                                    (i, j - 1),
+                                ])
+                            }
                         }
-                    }
 
-                    Region {
-                        _plant: plant,
-                        points: region,
-                    }
+                        Region {
+                            _plant: plant,
+                            points: region,
+                        }
+                    })
                 })
             })
-        })
-        .collect_vec();
-
-    println!(
-        "prepare : {}.{:0>3}ms",
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+            .collect_vec();
+    }
 
     // part 1
-    let now = Instant::now();
-
-    println!(
-        "part 1 : {} ({}.{:0>3}ms)",
-        regions.iter().map(|r| r.area() * r.part1()).sum::<usize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 1");
+        println!(
+            "part 1 : {}",
+            regions.iter().map(|r| r.area() * r.part1()).sum::<usize>()
+        );
+    }
 
     // part 2
-    let now = Instant::now();
-
-    println!(
-        "part 2 : {} ({}.{:0>3}ms)",
-        regions.iter().map(|r| r.area() * r.part2()).sum::<usize>(),
-        now.elapsed().as_millis(),
-        now.elapsed().subsec_millis()
-    );
+    {
+        timer!("part 2");
+        println!(
+            "part 2 : {}",
+            regions.iter().map(|r| r.area() * r.part2()).sum::<usize>()
+        );
+    }
 }
